@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KummeraAI</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1 class="title">KummeraAI</h1>
+
+<div class="settings">
+<input id="key" placeholder="Enter API Key (not saved anywhere)">
+<button onclick="toggleTheme()">Switch Theme</button>
+<button onclick="exportChat()">Export Chat</button>
+</div>
+
+<div id="chatbox"></div>
+
+<div class="inputArea">
+<input id="input" placeholder="Type message..." autocomplete="off"/>
+<button onclick="send()">Send</button>
+<button onclick="startVoice()">🎤 Voice</button>
+</div>
+
+<script>
+let history = []
+let dark = true
+
+function addMessage(sender, text) {
+    let chat = document.getElementById("chatbox")
+    chat.innerHTML += `<div class='${sender}'>${text}</div>`
+    chat.scrollTop = chat.scrollHeight
+}
+
+async function send() {
+    let input = document.getElementById("input")
+    let key = document.getElementById("key").value
+
+    if (!key) {
+        alert("Enter API key first, it can be from any service!")
+        return
+    }
+
+    let msg = input.value
+    addMessage("user", "You: " + msg)
+
+    input.value = ""
+
+    addMessage("ai", "KummeraAI is typing...")
+
+    let response = await fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            api_key: key,
+            message: msg,
+            history: history
+        })
+    })
+
+    let data = await response.json()
+
+    document.querySelectorAll('.ai').forEach(e => {
+        if (e.innerHTML.includes("typing")) e.remove()
+    })
+
+    addMessage("ai", "KummeraAI: " + data.reply)
+
+    history.push({role: "user", content: msg})
+    history.push({role: "assistant", content: data.reply})
+}
+
+function toggleTheme() {
+    dark = !dark
+    document.body.className = dark ? "dark" : "light"
+}
+
+function exportChat() {
+    let text = history.map(h => h.role + ": " + h.content).join("\n")
+    let blob = new Blob([text], {type: "text/plain"})
+    let a = document.createElement("a")
+    a.href = URL.createObjectURL(blob)
+    a.download = "kummera_chat.txt"
+    a.click()
+}
+
+function startVoice() {
+    let rec = new webkitSpeechRecognition()
+    rec.onresult = function(e) {
+        document.getElementById("input").value =
+            e.results[0][0].transcript
+    }
+    rec.start()
+}
+</script>
+
+</body>
+</html>

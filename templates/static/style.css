@@ -1,0 +1,60 @@
+body.dark {
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: white;
+}
+
+body.light {
+    background: linear-gradient(135deg, #ffffff, #e3e3ff);
+    color: black;
+}
+
+.title {
+    text-align: center;
+    font-size: 45px;
+    background: linear-gradient(to right, #ff00cc, #3333ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#chatbox {
+    width: 80%;
+    margin: auto;
+    height: 350px;
+    overflow-y: auto;
+    border: 1px solid #555;
+    padding: 10px;
+    background: rgba(0,0,0,0.3);
+}
+
+.inputArea {
+    text-align: center;
+    margin-top: 10px;
+}
+
+input {
+    width: 60%;
+    padding: 10px;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    background: linear-gradient(to right, #ff00cc, #3333ff);
+    color: white;
+    border: none;
+}
+
+.user {
+    color: #66ffcc;
+    margin: 5px;
+}
+
+.ai {
+    color: #ff99ff;
+    margin: 5px;
+}
+
+.settings {
+    text-align: center;
+    margin-bottom: 10px;
+}
